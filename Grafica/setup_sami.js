@@ -200,13 +200,13 @@ am5.ready(() => {
     series.data.removeIndex(0);
     series.data.push({
       date: time,
-      value: variable[2],
+      value: datos[2].value / 10,
     });
 
     var newDataItem = series.dataItems[series.dataItems.length - 1];
     newDataItem.animate({
       key: "valueYWorking",
-      to: variable[2],
+      to: datos[2].value / 10,
       from: lastValue,
       duration: 600,
       easing: easing,
@@ -235,8 +235,8 @@ am5.ready(() => {
       }
     }
   }
-  /*const socket = new WebSocket("ws://148.213.190.228:1955");
-  socket.addEventListener("open", () => {
+  const socketd = new WebSocket("ws://148.213.190.228:1955");
+  socketd.addEventListener("open", () => {
     console.log("Conexión WebSocket establecida");
 
     // Puedes enviar un mensaje al servidor si es necesario
@@ -244,14 +244,14 @@ am5.ready(() => {
   });
 
   // Evento 'message' para manejar los mensajes recibidos del servidor
-  socket.addEventListener("message", (event) => {
+  socketd.addEventListener("message", (event) => {
     datos = JSON.parse(event.data);
 
     // Procesar los datos recibidos como sea necesario
   });
 
   // Evento 'close' para manejar la desconexión del servidor
-  socket.addEventListener("close", () => {
+  socketd.addEventListener("close", () => {
     console.log("Conexión WebSocket cerrada");
   });
   // Make stuff animate on load
