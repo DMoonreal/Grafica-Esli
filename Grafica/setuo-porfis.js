@@ -108,8 +108,7 @@ am5.ready(function () {
       duration: 500,
       easing: am5.ease.out(am5.ease.cubic),
     });
-    x;
-  }, 1000000);
+  }, 100);
 
   chart.bulletsContainer.set("mask", undefined);
 
@@ -159,11 +158,11 @@ am5.ready(function () {
     });
   });
 
-  const socket = new WebSocket("ws://148.213.190.228:1955"); // Reemplaza la dirección con la URL del servidor WebSocket
+  const socket = new WebSocket("wss://mqttsensors.onrender.com/api"); // Reemplaza la dirección con la URL del servidor WebSocket
 
   // Evento 'open' para manejar la conexión exitosa
   socket.addEventListener("open", () => {
-    console.log("Conexión WebSocket establecida");
+    console.log("Conexión WebSocket establecida porfis");
 
     // Puedes enviar un mensaje al servidor si es necesario
     // socket.send('Mensaje de prueba');
@@ -172,14 +171,13 @@ am5.ready(function () {
   // Evento 'message' para manejar los mensajes recibidos del servidor
   socket.addEventListener("message", (event) => {
     datos = JSON.parse(event.data);
-    console.log("Datos recibidos del servidor:", datos);
 
     // Procesar los datos recibidos como sea necesario
   });
 
   // Evento 'close' para manejar la desconexión del servidor
   socket.addEventListener("close", () => {
-    console.log("Conexión WebSocket cerrada");
+    console.log("Conexión WebSocket cerrada PORFI");
   });
 
   // Make stuff animate on load

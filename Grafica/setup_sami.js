@@ -1,5 +1,25 @@
 am5.ready(() => {
   let datos = [];
+  const socket = new WebSocket("wss://mqttsensors.onrender.com/api"); // Reemplaza la dirección con la URL del servidor WebSocket
+
+  // Evento 'open' para manejar la conexión exitosa
+  socket.addEventListener("open", () => {
+    console.log("Conexión WebSocket establecida SAMU");
+
+    // Puedes enviar un mensaje al servidor si es necesario
+    // socket.send('Mensaje de prueba');
+  });
+
+  // Evento 'message' para manejar los mensajes recibidos del servidor
+  socket.addEventListener("message", (event) => {
+    datos = JSON.parse(event.data);
+    // Procesar los datos recibidos como sea necesario
+  });
+
+  // Evento 'close' para manejar la desconexión del servidor
+  socket.addEventListener("close", () => {
+    console.log("Conexión WebSocket cerrada SAMU");
+  });
   //Una vez que la biblioteca amCharts esté lista, el código se ejecutará.
 
   // Create root element
@@ -13,7 +33,7 @@ am5.ready(() => {
   /* AQUÍ SE INSERTA LA INFORMACIÓN DE LOS SENSORES (QUITAR RANDOM DATA) */
   // Generate data
   //PRIMER VERSION
-  var value = 0;
+  let value = 0;
 
   function generateChartData() {
     var chartData = [];
@@ -25,7 +45,7 @@ am5.ready(() => {
       var newDate = new Date(firstDate);
       newDate.setSeconds(newDate.getSeconds() + i);
 
-      value += (Math.random() < 0.5 ? 1 : -1) * Math.random() * 10;
+      value += 1;
 
       chartData.push({
         date: newDate.getTime(),
@@ -36,23 +56,6 @@ am5.ready(() => {
   }
 
   var data = generateChartData();
-
-  //RECOMENDACION DE CHATGPT
-  const socket = new WebSocket("ws://148.213.190.228:1955");
-
-  socket.addEventListener("open", () => {
-    console.log("Conexión WebSocket establecida");
-  });
-
-  socket.addEventListener("message", (event) => {
-    datos = JSON.parse(event.data);
-    updateChart(); // Llama a la función para actualizar el gráfico con los nuevos datos
-  });
-
-  socket.addEventListener("close", () => {
-    console.log("Conexión WebSocket cerrada");
-  });
-
   // Create chart
   // https://www.amcharts.com/docs/v5/charts/xy-chart/
   var chart = root.container.children.push(
@@ -200,13 +203,13 @@ am5.ready(() => {
     series.data.removeIndex(0);
     series.data.push({
       date: time,
-      value: datos[2].value / 10,
+      value: datos[0].value,
     });
 
     var newDataItem = series.dataItems[series.dataItems.length - 1];
     newDataItem.animate({
       key: "valueYWorking",
-      to: datos[2].value / 10,
+      to: datos[0].value,
       from: lastValue,
       duration: 600,
       easing: easing,
@@ -235,26 +238,8 @@ am5.ready(() => {
       }
     }
   }
-  const socketd = new WebSocket("ws://148.213.190.228:1955");
-  socketd.addEventListener("open", () => {
-    console.log("Conexión WebSocket establecida");
-
-    // Puedes enviar un mensaje al servidor si es necesario
-    // socket.send('Mensaje de prueba');
-  });
-
-  // Evento 'message' para manejar los mensajes recibidos del servidor
-  socketd.addEventListener("message", (event) => {
-    datos = JSON.parse(event.data);
-
-    // Procesar los datos recibidos como sea necesario
-  });
-
-  // Evento 'close' para manejar la desconexión del servidor
-  socketd.addEventListener("close", () => {
-    console.log("Conexión WebSocket cerrada");
-  });
   // Make stuff animate on load
   // https://www.amcharts.com/docs/v5/concepts/animations/*/
+
   chart.appear(1000, 100);
 }); // Here ends am5.ready();

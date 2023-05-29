@@ -40,7 +40,7 @@ am5.ready(function () {
     am5xy.ValueAxis.new(root, {
       maxDeviation: 0,
       min: 0,
-      max: 1024,
+      max: 3,
       strictMinMax: true,
       renderer: axisRenderer,
     })
@@ -71,13 +71,13 @@ am5.ready(function () {
       duration: 800,
       easing: am5.ease.out(am5.ease.cubic),
     });
-  }, 200);
+  }, 100);
 
   // Make stuff animate on load
   chart.appear(1000, 100);
-  const socketd = new WebSocket("ws://148.213.190.228:1955");
+  const socketd = new WebSocket("wss://mqttsensors.onrender.com/api");
   socketd.addEventListener("open", () => {
-    console.log("Conexión WebSocket establecida");
+    console.log("Conexión WebSocket establecida ISACC");
 
     // Puedes enviar un mensaje al servidor si es necesario
     // socket.send('Mensaje de prueba');
@@ -92,6 +92,6 @@ am5.ready(function () {
 
   // Evento 'close' para manejar la desconexión del servidor
   socketd.addEventListener("close", () => {
-    console.log("Conexión WebSocket cerrada");
+    console.log("Conexión WebSocket cerrada ISACC");
   });
 }); // end am5.ready()

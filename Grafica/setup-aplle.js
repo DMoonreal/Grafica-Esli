@@ -1,5 +1,7 @@
 let change = 1;
+
 am5.ready(function () {
+  let datos = [];
   // Create root element
   // https://www.amcharts.com/docs/v5/getting-started/#Root_element
   var root = am5.Root.new("apllediv");
@@ -83,12 +85,16 @@ am5.ready(function () {
         stroke: am5.color(0x003566),
       });
       change = 0;
+      socketd.send(JSON.stringify({ type: 1 }));
+      console.log("He apagao"); //MANDAR AQUÍ LA SEÑAL PARA APAGAR EL FOCO IoT
     } else {
       backgroundSeries.mapPolygons.template.setAll({
         fill: am5.color(0xd4f1f9),
         stroke: am5.color(0xd4f1f9),
       });
       change = 1;
+      console.log("He prendio"); //MANDAR AQUÍ LA SEÑAL PARA PRENDER EL FOCO IoT
+      socketd.send(JSON.stringify({ type: 1 }));
     }
   });
   // Rotate animation
@@ -99,7 +105,26 @@ am5.ready(function () {
     duration: 30000,
     loops: Infinity,
   });
+  const socketd = new WebSocket("wss://mqttsensors.onrender.com/api");
+  socketd.addEventListener("open", () => {
+    console.log("Conexión WebSocket establecida APLLE");
 
+    // Puedes enviar un mensaje al servidor si es necesario
+    // socket.send('Mensaje de prueba');
+  });
+
+  // Evento 'message' para manejar los mensajes recibidos del servidor
+  socketd.addEventListener("message", (event) => {
+    datos = JSON.parse(event.data);
+    console.log(datos);
+
+    // Procesar los datos recibidos como sea necesario
+  });
+
+  // Evento 'close' para manejar la desconexión del servidor
+  socketd.addEventListener("close", () => {
+    console.log("Conexión WebSocket cerrada APLLE");
+  });
   // Make stuff animate on load
   chart.appear(1000, 100);
 }); // end am5.ready()
